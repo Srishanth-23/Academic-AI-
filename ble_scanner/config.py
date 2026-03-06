@@ -1,0 +1,11 @@
+API_URL = "http://127.0.0.1:8000/ble/detect"
+
+SCANNER_ID = "CIT_CLASSROOM_101"
+
+SCAN_DURATION = 10
+
+SCAN_INTERVAL = 30
+
+RSSI_THRESHOLD = -70
+
+OFFLINE_FILE = "offline_attendance.json"
