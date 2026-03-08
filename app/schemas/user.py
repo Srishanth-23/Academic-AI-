@@ -1,15 +1,4 @@
-from sqlalchemy import Column, Integer, String
-from app.database import Base
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String, nullable=False)
-    role = Column(String, nullable=False)
-    
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
@@ -17,7 +6,17 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     role: str
+    unique_id: str
+    department: Optional[str] = None
+    section_id: Optional[int] = None
+    is_class_advisor: Optional[bool] = False
+    class_advisor_for_section_id: Optional[int] = None
 
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class ChangePasswordRequest(BaseModel):
+    email: EmailStr
+    old_password: str
+    new_password: str

@@ -12,6 +12,12 @@ from app.services.coding_service import (
     add_contest_result
 )
 
+from app.services.coding_proxy_service import (
+    fetch_leetcode_stats,
+    fetch_codeforces_stats,
+    fetch_codechef_stats
+)
+
 router = APIRouter()
 
 
@@ -31,3 +37,18 @@ def add_activity(data: CodingActivityCreate, db: Session = Depends(get_db)):
 @router.post("/contest")
 def add_contest(data: ContestHistoryCreate, db: Session = Depends(get_db)):
     return add_contest_result(db, data)
+
+
+# Fetch live competitive programming stats from 3rd party APIs
+@router.get("/stats/{platform}/{username}")
+async def get_live_coding_stats(platform: str, username: str):
+    platform = platform.lower()
+    if platform == "leetcode":
+        return await fetch_leetcode_stats(username)
+    elif platform == "codeforces":
+        return await fetch_codeforces_stats(username)
+    elif platform == "codechef":
+        return await fetch_codechef_stats(username)
+    else:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=400, detail="Unsupported platform. Use leetcode, codeforces, or codechef.")

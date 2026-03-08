@@ -15,7 +15,12 @@ def register_user(db: Session, user):
         name=user.name,
         email=user.email,
         hashed_password=hash_password(user.password),
-        role=user.role
+        role=user.role,
+        unique_id=user.unique_id,
+        department=getattr(user, 'department', None),
+        section_id=getattr(user, 'section_id', None),
+        is_class_advisor=getattr(user, 'is_class_advisor', False),
+        class_advisor_for_section_id=getattr(user, 'class_advisor_for_section_id', None)
     )
 
 
@@ -41,4 +46,4 @@ def login_user(db: Session, email: str, password: str):
 
     token = create_access_token({"sub": user.email})
 
-    return token
+    return {"token": token, "user_id": user.id, "role": user.role, "name": user.name}
